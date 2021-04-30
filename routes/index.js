@@ -1,7 +1,8 @@
-const fs = require('fs')
+import { Router } from 'express'
+import appointmentRouter from './appointment.js'
 
-module.exports = (app) => {
-  app.get('/', (req, res) => {
-    res.end('Hello')
-  })
-}
+const router = Router()
+
+appointmentRouter(router)
+
+export default router

@@ -1,15 +1,15 @@
-const express = require('express')
-const bodyParser = require('body-parser')
+import express from 'express'
+import bodyParser from 'body-parser'
+import routes from './routes/index.js'
 
 const app = express()
-
 const port = 8000
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
-require('./routes/index')(app)
+app.use(routes)
 
 app.listen(port, () => {
-  console.log(`Servidor iniciado na porta ${ port }`)
+  console.log(`Server running at port ${ port }`)
 })
