@@ -1,27 +1,18 @@
-import appointmentController from '../controllers/appointment.js'
+import { Router } from 'express'
+import AppointmentValidator from '../app/middlewares/appointmentValidator.js'
+import AppointmentController from '../app/controllers/appointment.js'
 
-const AppoinmentRouter = (router) => {
-  router.route('/appointment')
-    .get((req, res) => {
-      res.status(200).send(appointmentController.findAll())
-    })
-    .post((req, res) => {
-      res.status(200).send(appointmentController.post())
-    })
+const router = Router()
 
-  router.route('/appointment/:id')
-    .get((req, res) => {
-      res.status(200).send(appointmentController.find())
-    })
-    .put((req, res) => {
-      res.status(200).send(appointmentController.update())
-    })
-    .delete((req, res) => {
-      res.status(200).send(appointmentController.delete())
-    })
-    .post((req, res) => {
-      res.status(200).send(appointmentController.findByUser())
-    })
-}
+router.route('/')
+  .get(AppointmentController.findAll)
+  .post(AppointmentValidator.createRules, AppointmentValidator.validateCreate, AppointmentController.create)
 
-export default AppoinmentRouter
+router.route('/:id')
+  .get(AppointmentValidator.idRules, AppointmentValidator.validate, AppointmentController.findOne)
+  .put(AppointmentValidator.updateRules, AppointmentValidator.validate, AppointmentController.update)
+  .delete(AppointmentValidator.idRules, AppointmentValidator.validate, AppointmentController.delete)
+
+router.get('/user/:id', AppointmentValidator.userIdRules, AppointmentValidator.validate, AppointmentController.findByUser)
+
+export default router
