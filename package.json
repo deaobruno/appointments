@@ -2,23 +2,27 @@
   "name": "apontamentos",
   "version": "1.0.0",
   "description": "API Rest para apontamento de horas",
+  "author": "Bruno Oliveira",
   "type": "module",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
-    "dev": "nodemon index.js"
+    "test": "mocha",
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "lint": "eslint ./"
   },
   "keywords": [],
-  "author": "Bruno Oliveira",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
-    "fs": "0.0.1-security",
+    "express-validator": "^6.10.1",
     "mongoose": "^5.12.6"
   },
   "devDependencies": {
+    "chai": "^4.3.4",
+    "eslint": "^7.25.0",
+    "mocha": "^8.3.2",
     "nodemon": "^2.0.7"
   }
 }
