@@ -51,7 +51,7 @@ class AppointmentController {
   }
 
   async findByUser(req, res, next) {
-    await Appointment.find({ user: req.params.id }, (err, result) => {
+    await Appointment.find({ user_id: req.params.id }, (err, result) => {
       if (err) {
         next(err)
         return
