@@ -42,10 +42,10 @@ class UserValidator {
       return
     }
 
-    let result = await User.findOne(req.body)
+    let user = await User.findOne(req.body)
 
-    if (result) {
-      res.status(409).send({ error: 'User already registered!' })
+    if (user) {
+      res.status(409).send({ error: 'User already registered' })
       return
     }
 
@@ -57,6 +57,13 @@ class UserValidator {
 
     if (!errors.isEmpty()) {
       res.status(400).send(errors.array())
+      return
+    }
+
+    let user = await User.findById(req.params.id)
+
+    if (!user) {
+      res.status(404).send({ error: 'User not found' })
       return
     }
 

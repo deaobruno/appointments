@@ -9,7 +9,7 @@ class UserController {
       }
 
       if (!result) {
-        next(new Error('Not found'))
+        next(new Error('User not found'))
         return
       }
 
@@ -24,6 +24,11 @@ class UserController {
         return
       }
 
+      if (result.length <= 0) {
+        next(new Error('Users not found'))
+        return
+      }
+
       res.status(200).send(result)
     })
   }
@@ -35,7 +40,7 @@ class UserController {
         return
       }
 
-      res.status(201).send({ success: 'User created successfully.', data: user })
+      res.status(201).send({ success: 'User created successfully', data: user })
     })
   }
 
@@ -46,7 +51,7 @@ class UserController {
         return
       }
 
-      res.status(200).send({ success: 'User updated successfully.', data: result })
+      res.status(200).send({ success: 'User updated successfully', data: result })
     })
   }
 
@@ -57,7 +62,7 @@ class UserController {
         return
       }
     
-      res.status(200).send({ success: 'User deleted successfully.' })
+      res.status(200).send({ success: 'User deleted successfully' })
     })
   }
 }

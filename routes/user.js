@@ -9,7 +9,7 @@ router.route('/')
   .post(UserValidator.createRules, UserValidator.validateCreate, UserController.create)
 
 router.route('/:id')
-  .get(UserValidator.idRules, UserValidator.validate, UserController.findOne)
+  .get(UserValidator.idRules, UserController.findOne)
   .put(UserValidator.updateRules, UserValidator.validate, UserController.update)
   .delete(UserValidator.idRules, UserValidator.validate, UserController.delete)
 
