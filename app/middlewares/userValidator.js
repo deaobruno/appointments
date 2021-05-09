@@ -5,6 +5,7 @@ class UserValidator {
   constructor() {
     this.idRules = [
       param('id').notEmpty()
+        .withMessage('Missing attribute')
         .trim()
         .escape()
         .isMongoId()
@@ -20,13 +21,14 @@ class UserValidator {
 
     this.updateRules = [
       param('id').notEmpty()
+        .withMessage('Missing attribute')
         .trim()
         .escape()
         .isMongoId()
         .withMessage('Wrong format'),
 
-      body('name')
-        .if(name => typeof name !== 'undefined')
+      body('name').notEmpty()
+        .withMessage('Missing attribute')
         .trim()
         .escape(),
     ]

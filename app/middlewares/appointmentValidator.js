@@ -39,12 +39,14 @@ class AppointmentValidator {
         .withMessage('Must be today or greater'),
 
       body('start').notEmpty()
+        .withMessage('Missing attribute')
         .trim()
         .escape()
         .matches(this.timeRegex)
         .withMessage('Wrong format'),
 
       body('end').notEmpty()
+        .withMessage('Missing attribute')
         .trim()
         .escape()
         .matches(this.timeRegex)
@@ -53,6 +55,7 @@ class AppointmentValidator {
         .withMessage('Must be grater than start time'),
 
       body('user_id').notEmpty()
+        .withMessage('Missing attribute')
         .trim()
         .escape()
         .isMongoId()
@@ -61,10 +64,14 @@ class AppointmentValidator {
 
     this.updateRules = [
       param('id').notEmpty()
+        .withMessage('Missing attribute')
         .trim()
         .escape()
         .isMongoId()
         .withMessage('Wrong format'),
+
+      body().custom(body => Object.keys(body).length > 0)
+        .withMessage('Missing attributes'),
 
       body('date').if(date => typeof date !== 'undefined')
         .trim()
@@ -88,8 +95,7 @@ class AppointmentValidator {
         .custom((end, { req }) => end > req.body.start)
         .withMessage('Must be grater than start time'),
 
-      body('user_id')
-        .if(user => typeof user !== 'undefined')
+      body('user_id').if(user => typeof user !== 'undefined')
         .trim()
         .escape()
         .isMongoId()
