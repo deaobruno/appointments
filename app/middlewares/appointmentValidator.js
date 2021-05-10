@@ -112,11 +112,114 @@ class AppointmentValidator {
       return
     }
 
-    let result = await Appointment.findOne(req.body)
+    let appointment = await Appointment.findOne(req.body)
 
-    if (result) {
+    if (appointment) {
       res.status(409).send({ error: 'Appointment already registered' })
       return
+    }
+
+    let startConflicts = await Appointment.find({
+      date: req.body.date,
+      user_id: req.body.user_id,
+      start: { $lte: req.body.start },
+      end: { $gte: req.body.start },
+    })
+
+    if (startConflicts.length > 0) {
+      res.status(409).send({ error: 'Conflict with start date' })
+      return
+    }
+
+    let endConflicts = await Appointment.find({
+      date: req.body.date,
+      user_id: req.body.user_id,
+      start: { $lte: req.body.end },
+      end: { $gte: req.body.end },
+    })
+
+    if (endConflicts.length > 0) {
+      res.status(409).send({ error: 'Conflict with end date' })
+      return
+    }
+
+    let startEndConflicts = await Appointment.find({
+      date: req.body.date,
+      user_id: req.body.user_id,
+      start: { $gte: req.body.start },
+      end: { $lte: req.body.end },
+    })
+
+    if (startEndConflicts.length > 0) {
+      res.status(409).send({ error: 'Conflict with start and end date' })
+      return
+    }
+
+    next()
+  }
+
+  async validateUpdate(req, res, next) {
+    const errors = validationResult(req)
+
+    let startConflicts
+    let endConflicts
+    let startEndConflicts
+
+    if (!errors.isEmpty()) {
+      res.status(400).send(errors.array())
+      return
+    }
+
+    let appointment = await Appointment.findById(req.params.id)
+
+    if (!appointment) {
+      res.status(404).send({ error: 'Appointment not found' })
+      return
+    }
+
+    if (req.body.start) {
+      startConflicts = await Appointment.find({
+        id: { $ne: req.params.id },
+        date: req.body.date,
+        user_id: req.body.user_id,
+        start: { $lte: req.body.start },
+        end: { $gte: req.body.start },
+      })
+
+      if (startConflicts.length > 0) {
+        res.status(409).send({ error: 'Conflict with start date' })
+        return
+      }
+    }
+
+    if (req.body.start) {
+      endConflicts = await Appointment.find({
+        id: { $ne: req.params.id },
+        date: req.body.date,
+        user_id: req.body.user_id,
+        start: { $lte: req.body.end },
+        end: { $gte: req.body.end },
+      })
+
+      if (endConflicts.length > 0) {
+        res.status(409).send({ error: 'Conflict with end date' })
+        return
+      }
+    }
+
+    if (req.body.start && req.body.end) {
+      startEndConflicts = await Appointment.find({
+        id: { $ne: req.params.id },
+        date: req.body.date,
+        user_id: req.body.user_id,
+        start: { $gte: req.body.start },
+        end: { $lte: req.body.end },
+      })
+
+      if (startEndConflicts.length > 0) {
+        res.status(409).send({ error: 'Conflict with start and end date' })
+        return
+      }
     }
 
     next()

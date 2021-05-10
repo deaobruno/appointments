@@ -10,7 +10,7 @@ router.route('/')
 
 router.route('/:id')
   .get(AppointmentValidator.idRules, AppointmentController.findOne)
-  .put(AppointmentValidator.updateRules, AppointmentValidator.validate, AppointmentController.update)
+  .put(AppointmentValidator.updateRules, AppointmentValidator.validateUpdate, AppointmentController.update)
   .delete(AppointmentValidator.idRules, AppointmentValidator.validate, AppointmentController.delete)
 
 router.get('/user/:id', AppointmentValidator.userIdRules, AppointmentValidator.validateFindByUser, AppointmentController.findByUser)
