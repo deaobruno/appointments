@@ -1,5 +1,6 @@
 import { body, param, validationResult } from 'express-validator'
 import Appointment from '../models/appointment.js'
+import User from '../models/user.js'
 
 class AppointmentValidator {
   constructor() {
@@ -114,7 +115,7 @@ class AppointmentValidator {
     let result = await Appointment.findOne(req.body)
 
     if (result) {
-      res.status(409).send({ error: 'Appointment already registered!' })
+      res.status(409).send({ error: 'Appointment already registered' })
       return
     }
 
@@ -126,6 +127,31 @@ class AppointmentValidator {
 
     if (!errors.isEmpty()) {
       res.status(400).send(errors.array())
+      return
+    }
+
+    let appointment = await Appointment.findById(req.params.id)
+
+    if (!appointment) {
+      res.status(404).send({ error: 'Appointment not found' })
+      return
+    }
+
+    next()
+  }
+
+  async validateFindByUser(req, res, next) {
+    const errors = validationResult(req)
+
+    if (!errors.isEmpty()) {
+      res.status(400).send(errors.array())
+      return
+    }
+
+    let user = await User.findById(req.params.id)
+
+    if (!user) {
+      res.status(404).send({ error: 'User not found' })
       return
     }
 

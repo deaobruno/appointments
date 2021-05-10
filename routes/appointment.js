@@ -9,10 +9,10 @@ router.route('/')
   .post(AppointmentValidator.createRules, AppointmentValidator.validateCreate, AppointmentController.create)
 
 router.route('/:id')
-  .get(AppointmentValidator.idRules, AppointmentValidator.validate, AppointmentController.findOne)
+  .get(AppointmentValidator.idRules, AppointmentController.findOne)
   .put(AppointmentValidator.updateRules, AppointmentValidator.validate, AppointmentController.update)
   .delete(AppointmentValidator.idRules, AppointmentValidator.validate, AppointmentController.delete)
 
-router.get('/user/:id', AppointmentValidator.userIdRules, AppointmentValidator.validate, AppointmentController.findByUser)
+router.get('/user/:id', AppointmentValidator.userIdRules, AppointmentValidator.validateFindByUser, AppointmentController.findByUser)
 
 export default router

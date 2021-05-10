@@ -9,7 +9,7 @@ class AppointmentController {
       }
 
       if (!result) {
-        res.status(404).send({ error: 'Not found' })
+        res.status(404).send({ error: 'Appointment not found' })
         return
       }
 
@@ -21,6 +21,11 @@ class AppointmentController {
     await Appointment.find((err, result) => {
       if (err) {
         next(err)
+        return
+      }
+
+      if (result.length <= 0) {
+        res.status(404).send({ error: 'Appointments not found' })
         return
       }
 
@@ -54,6 +59,11 @@ class AppointmentController {
     await Appointment.find({ user_id: req.params.id }, (err, result) => {
       if (err) {
         next(err)
+        return
+      }
+
+      if (result.length <= 0) {
+        res.status(404).send({ error: 'Appointments not found' })
         return
       }
 
