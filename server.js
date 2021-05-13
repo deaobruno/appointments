@@ -1,12 +1,12 @@
-import express from 'express'
-import bodyParser from 'body-parser'
-import {app as routes} from './routes/index.js'
+import express from 'express';
+import bodyParser from 'body-parser';
+import {app as routes} from './routes/index.js';
 
-const app = express()
+const app = express();
 
-app.use(bodyParser.urlencoded({extended: true}))
-app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 
-app.use(routes)
+app.use(routes);
 
-export {app}
+export {app};

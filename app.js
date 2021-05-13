@@ -1,5 +1,5 @@
-import {app} from './server.js'
+import {app} from './server.js';
 
-const port = 8000
+const port = 8000;
 
-app.listen(port, console.log('Server running'))
+app.listen(port, console.log('Server running'));

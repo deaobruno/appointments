@@ -1,7 +1,7 @@
-import {mongoose} from '../../database/db.js'
-import {User} from '../models/user.js'
+import {mongoose} from '../../database/db.js';
+import {User} from '../models/user.js';
       
-let timeRegex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/
+let timeRegex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
 
 let AppointmentSchema = mongoose.Schema({
   date: {
@@ -26,8 +26,8 @@ let AppointmentSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId, ref: User,
     required: [true, 'Missing attribute!'],
   },
-})
+});
 
-let Appointment = mongoose.model('Appointment', AppointmentSchema)
+let Appointment = mongoose.model('Appointment', AppointmentSchema);
 
-export {Appointment}
+export {Appointment};

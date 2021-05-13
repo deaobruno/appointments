@@ -1,17 +1,17 @@
-import {body, param, validationResult} from 'express-validator'
-import {Appointment} from '../models/appointment.js'
-import {User} from '../models/user.js'
+import {body, param, validationResult} from 'express-validator';
+import {Appointment} from '../models/appointment.js';
+import {User} from '../models/user.js';
 
 class AppointmentValidator {
   constructor() {
-    let today = new Date()
-    today.setDate(today.getDate() - 1)
-    let todayMonth = today.getMonth() + 1
-    todayMonth = (todayMonth < 10 ? '0' : '') + todayMonth
-    let todayDate = today.getDate() < 10 ? '0' + today.getDate() : today.getDate()
+    let today = new Date();
+    today.setDate(today.getDate() - 1);
+    let todayMonth = today.getMonth() + 1;
+    todayMonth = (todayMonth < 10 ? '0' : '') + todayMonth;
+    let todayDate = today.getDate() < 10 ? '0' + today.getDate() : today.getDate();
     
-    this.todayWithoutTime = `${today.getFullYear()}-${todayMonth}-${todayDate}`
-    this.timeRegex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/
+    this.todayWithoutTime = `${today.getFullYear()}-${todayMonth}-${todayDate}`;
+    this.timeRegex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
 
     this.idRules = [
       param('id').notEmpty()
@@ -19,7 +19,7 @@ class AppointmentValidator {
         .escape()
         .isMongoId()
         .withMessage('Wrong format'),
-    ]
+    ];
 
     this.userIdRules = [
       param('id').notEmpty()
@@ -27,7 +27,7 @@ class AppointmentValidator {
         .escape()
         .isMongoId()
         .withMessage('Wrong format'),
-    ]
+    ];
 
     this.createRules = [
       body('date').notEmpty()
@@ -61,7 +61,7 @@ class AppointmentValidator {
         .escape()
         .isMongoId()
         .withMessage('Wrong format'),
-    ]
+    ];
 
     this.updateRules = [
       param('id').notEmpty()
@@ -101,22 +101,22 @@ class AppointmentValidator {
         .escape()
         .isMongoId()
         .withMessage('Wrong format'),
-    ]
+    ];
   }
 
   async validateCreate(req, res, next) {
-    const errors = validationResult(req)
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      res.status(400).send(errors.array())
-      return
+      res.status(400).send(errors.array());
+      return;
     }
 
-    let appointment = await Appointment.findOne(req.body)
+    let appointment = await Appointment.findOne(req.body);
 
     if (appointment) {
-      res.status(409).send({error: 'Appointment already registered'})
-      return
+      res.status(409).send({error: 'Appointment already registered'});
+      return;
     }
 
     let startConflicts = await Appointment.find({
@@ -124,11 +124,11 @@ class AppointmentValidator {
       user_id: req.body.user_id,
       start: {$lte: req.body.start},
       end: {$gte: req.body.start},
-    })
+    });
 
     if (startConflicts.length > 0) {
-      res.status(409).send({error: 'Conflict with start date'})
-      return
+      res.status(409).send({error: 'Conflict with start date'});
+      return;
     }
 
     let endConflicts = await Appointment.find({
@@ -136,11 +136,11 @@ class AppointmentValidator {
       user_id: req.body.user_id,
       start: {$lte: req.body.end},
       end: {$gte: req.body.end},
-    })
+    });
 
     if (endConflicts.length > 0) {
-      res.status(409).send({error: 'Conflict with end date'})
-      return
+      res.status(409).send({error: 'Conflict with end date'});
+      return;
     }
 
     let startEndConflicts = await Appointment.find({
@@ -148,33 +148,33 @@ class AppointmentValidator {
       user_id: req.body.user_id,
       start: {$gte: req.body.start},
       end: {$lte: req.body.end},
-    })
+    });
 
     if (startEndConflicts.length > 0) {
-      res.status(409).send({error: 'Conflict with start and end date'})
-      return
+      res.status(409).send({error: 'Conflict with start and end date'});
+      return;
     }
 
-    next()
+    next();
   }
 
   async validateUpdate(req, res, next) {
-    const errors = validationResult(req)
+    const errors = validationResult(req);
 
-    let startConflicts
-    let endConflicts
-    let startEndConflicts
+    let startConflicts;
+    let endConflicts;
+    let startEndConflicts;
 
     if (!errors.isEmpty()) {
-      res.status(400).send(errors.array())
-      return
+      res.status(400).send(errors.array());
+      return;
     }
 
-    let appointment = await Appointment.findById(req.params.id)
+    let appointment = await Appointment.findById(req.params.id);
 
     if (!appointment) {
-      res.status(404).send({error: 'Appointment not found'})
-      return
+      res.status(404).send({error: 'Appointment not found'});
+      return;
     }
 
     if (req.body.start) {
@@ -184,11 +184,11 @@ class AppointmentValidator {
         user_id: req.body.user_id,
         start: {$lte: req.body.start},
         end: {$gte: req.body.start},
-      })
+      });
 
       if (startConflicts.length > 0) {
-        res.status(409).send({error: 'Conflict with start date'})
-        return
+        res.status(409).send({error: 'Conflict with start date'});
+        return;
       }
     }
 
@@ -199,11 +199,11 @@ class AppointmentValidator {
         user_id: req.body.user_id,
         start: {$lte: req.body.end},
         end: {$gte: req.body.end},
-      })
+      });
 
       if (endConflicts.length > 0) {
-        res.status(409).send({error: 'Conflict with end date'})
-        return
+        res.status(409).send({error: 'Conflict with end date'});
+        return;
       }
     }
 
@@ -214,52 +214,52 @@ class AppointmentValidator {
         user_id: req.body.user_id,
         start: {$gte: req.body.start},
         end: {$lte: req.body.end},
-      })
+      });
 
       if (startEndConflicts.length > 0) {
-        res.status(409).send({error: 'Conflict with start and end date'})
-        return
+        res.status(409).send({error: 'Conflict with start and end date'});
+        return;
       }
     }
 
-    next()
+    next();
   }
 
   async validate(req, res, next) {
-    const errors = validationResult(req)
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      res.status(400).send(errors.array())
-      return
+      res.status(400).send(errors.array());
+      return;
     }
 
-    let appointment = await Appointment.findById(req.params.id)
+    let appointment = await Appointment.findById(req.params.id);
 
     if (!appointment) {
-      res.status(404).send({error: 'Appointment not found'})
-      return
+      res.status(404).send({error: 'Appointment not found'});
+      return;
     }
 
-    next()
+    next();
   }
 
   async validateFindByUser(req, res, next) {
-    const errors = validationResult(req)
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      res.status(400).send(errors.array())
-      return
+      res.status(400).send(errors.array());
+      return;
     }
 
-    let user = await User.findById(req.params.id)
+    let user = await User.findById(req.params.id);
 
     if (!user) {
-      res.status(404).send({error: 'User not found'})
-      return
+      res.status(404).send({error: 'User not found'});
+      return;
     }
 
-    next()
+    next();
   }
 }
 
-export {AppointmentValidator}
+export {AppointmentValidator};

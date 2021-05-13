@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
 mongoose.connect(
   'mongodb://localhost/appointments', 
@@ -8,6 +8,6 @@ mongoose.connect(
     useUnifiedTopology: true
   },
   console.log('Connected to DB')
-)
+);
 
-export {mongoose}
+export {mongoose};
