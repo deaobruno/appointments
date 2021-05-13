@@ -1,4 +1,4 @@
-import mongoose from '../../database/db.js'
+import {mongoose} from '../../database/db.js'
 
 let UserSchema = mongoose.Schema({
   name: {
@@ -7,6 +7,6 @@ let UserSchema = mongoose.Schema({
   },
 })
 
-let UserModel = mongoose.model('UserModel', UserSchema)
+let User = mongoose.model('User', UserSchema)
 
-export default UserModel
+export {User}

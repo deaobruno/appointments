@@ -1,16 +1,18 @@
-import { Router } from 'express'
-import UserValidator from '../app/middlewares/userValidator.js'
-import UserController from '../app/controllers/user.js'
+import {Router} from 'express'
+import {UserValidator} from '../app/middlewares/user-validator.js'
+import {UserController} from '../app/controllers/user.js'
 
 const router = Router()
+const validator = new UserValidator()
+const user = new UserController()
 
 router.route('/')
-  .get(UserController.findAll)
-  .post(UserValidator.createRules, UserValidator.validateCreate, UserController.create)
+  .get(user.findAll)
+  .post(validator.createRules, validator.validateCreate, user.create)
 
 router.route('/:id')
-  .get(UserValidator.idRules, UserController.findOne)
-  .put(UserValidator.updateRules, UserValidator.validate, UserController.update)
-  .delete(UserValidator.idRules, UserValidator.validate, UserController.delete)
+  .get(validator.idRules, user.findOne)
+  .put(validator.updateRules, validator.validate, user.update)
+  .delete(validator.idRules, validator.validate, user.delete)
 
-export default router
+export {router}

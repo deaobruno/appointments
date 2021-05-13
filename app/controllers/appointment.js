@@ -1,4 +1,4 @@
-import Appointment from '../models/appointment.js'
+import {Appointment} from '../models/appointment.js'
 
 class AppointmentController {
   async findOne(req, res, next) {
@@ -9,7 +9,7 @@ class AppointmentController {
       }
 
       if (!result) {
-        res.status(404).send({ error: 'Appointment not found' })
+        res.status(404).send({error: 'Appointment not found'})
         return
       }
 
@@ -25,7 +25,7 @@ class AppointmentController {
       }
 
       if (result.length <= 0) {
-        res.status(404).send({ error: 'Appointments not found' })
+        res.status(404).send({error: 'Appointments not found'})
         return
       }
 
@@ -40,30 +40,30 @@ class AppointmentController {
         return
       }
 
-      res.status(201).send({ success: 'Appointment created successfully.', data: result })
+      res.status(201).send({success: 'Appointment created successfully.', data: result})
     })
   }
 
   async update(req, res, next) {
-    await Appointment.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true }, (err, result) => {
+    await Appointment.findOneAndUpdate({_id: req.params.id}, req.body, {new: true}, (err, result) => {
       if (err) {
         next(err)
         return
       }
 
-      res.status(200).send({ success: 'Appointment updated successfully.', data: result })
+      res.status(200).send({success: 'Appointment updated successfully.', data: result})
     })
   }
 
   async findByUser(req, res, next) {
-    await Appointment.find({ user_id: req.params.id }, (err, result) => {
+    await Appointment.find({user_id: req.params.id}, (err, result) => {
       if (err) {
         next(err)
         return
       }
 
       if (result.length <= 0) {
-        res.status(404).send({ error: 'Appointments not found' })
+        res.status(404).send({error: 'Appointments not found'})
         return
       }
 
@@ -72,15 +72,15 @@ class AppointmentController {
   }
 
   async delete(req, res, next) {
-    await Appointment.deleteOne({ _id: req.params.id }, (err) => {
+    await Appointment.deleteOne({_id: req.params.id}, err => {
       if (err) {
         next(err)
         return
       }
     
-      res.status(200).send({ success: 'Appointment deleted successfully.' })
+      res.status(200).send({success: 'Appointment deleted successfully.'})
     })
   }
 }
 
-export default new AppointmentController()
+export {AppointmentController}

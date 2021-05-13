@@ -1,4 +1,4 @@
-import app from './server.js'
+import {app} from './server.js'
 
 const port = 8000
 

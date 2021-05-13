@@ -1,4 +1,4 @@
-import User from '../models/user.js'
+import {User} from '../models/user.js'
 
 class UserController {
   async findOne(req, res, next) {
@@ -40,31 +40,31 @@ class UserController {
         return
       }
 
-      res.status(201).send({ success: 'User created successfully', data: user })
+      res.status(201).send({success: 'User created successfully', data: user })
     })
   }
 
   async update(req, res, next) {
-    await User.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true }, (err, result) => {
+    await User.findOneAndUpdate({_id: req.params.id }, req.body, {new: true }, (err, result) => {
       if (err) {
         next(err)
         return
       }
 
-      res.status(200).send({ success: 'User updated successfully', data: result })
+      res.status(200).send({success: 'User updated successfully', data: result })
     })
   }
 
   async delete(req, res, next) {
-    await User.deleteOne({ _id: req.params.id }, (err) => {
+    await User.deleteOne({_id: req.params.id }, (err) => {
       if (err) {
         next(err)
         return
       }
     
-      res.status(200).send({ success: 'User deleted successfully' })
+      res.status(200).send({success: 'User deleted successfully' })
     })
   }
 }
 
-export default new UserController()
+export {UserController}

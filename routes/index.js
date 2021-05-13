@@ -1,6 +1,6 @@
 import express from 'express'
-import appointmentRouter from './appointment.js'
-import userRouter from './user.js'
+import {router as appointmentRouter} from './appointment.js'
+import {router as userRouter} from './user.js'
 
 const app = express()
 
@@ -8,15 +8,15 @@ app.use('/appointment', appointmentRouter)
 app.use('/user', userRouter)
 
 app.use((req, res) => {
-  res.status(404).send({ 'error': 'Not found' })
+  res.status(404).send({error: 'Not found'})
 })
 
 app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
   if (err) {
-    res.status(500).send({ error: err.message })
+    res.status(500).send({error: err.message})
   }
 
   next()
 })
 
-export default app
+export {app}

@@ -10,4 +10,4 @@ mongoose.connect(
   console.log('Connected to DB')
 )
 
-export default mongoose
+export {mongoose}

@@ -1,6 +1,6 @@
-import { body, param, validationResult } from 'express-validator'
-import Appointment from '../models/appointment.js'
-import User from '../models/user.js'
+import {body, param, validationResult} from 'express-validator'
+import {Appointment} from '../models/appointment.js'
+import {User} from '../models/user.js'
 
 class AppointmentValidator {
   constructor() {
@@ -10,7 +10,7 @@ class AppointmentValidator {
     todayMonth = (todayMonth < 10 ? '0' : '') + todayMonth
     let todayDate = today.getDate() < 10 ? '0' + today.getDate() : today.getDate()
     
-    this.todayWithoutTime = `${ today.getFullYear() }-${ todayMonth }-${ todayDate }`
+    this.todayWithoutTime = `${today.getFullYear()}-${todayMonth}-${todayDate}`
     this.timeRegex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/
 
     this.idRules = [
@@ -34,7 +34,7 @@ class AppointmentValidator {
         .withMessage('Missing attribute')
         .trim()
         .escape()
-        .isDate({ format: 'YYYY-MM-DD', delimiters: ['-'] })
+        .isDate({format: 'YYYY-MM-DD', delimiters: ['-']})
         .withMessage('Wrong format')
         .isAfter(this.todayWithoutTime)
         .withMessage('Must be today or greater'),
@@ -52,7 +52,7 @@ class AppointmentValidator {
         .escape()
         .matches(this.timeRegex)
         .withMessage('Wrong format')
-        .custom((end, { req }) => end > req.body.start)
+        .custom((end, {req}) => end > req.body.start)
         .withMessage('Must be grater than start time'),
 
       body('user_id').notEmpty()
@@ -77,7 +77,7 @@ class AppointmentValidator {
       body('date').if(date => typeof date !== 'undefined')
         .trim()
         .escape()
-        .isDate({ format: 'YYYY-MM-DD', delimiters: ['-'] })
+        .isDate({format: 'YYYY-MM-DD', delimiters: ['-']})
         .withMessage('Wrong format')
         .isAfter(this.todayWithoutTime)
         .withMessage('Must be today or greater'),
@@ -93,7 +93,7 @@ class AppointmentValidator {
         .escape()
         .matches(this.timeRegex)
         .withMessage('Wrong format')
-        .custom((end, { req }) => end > req.body.start)
+        .custom((end, {req}) => end > req.body.start)
         .withMessage('Must be grater than start time'),
 
       body('user_id').if(user => typeof user !== 'undefined')
@@ -115,43 +115,43 @@ class AppointmentValidator {
     let appointment = await Appointment.findOne(req.body)
 
     if (appointment) {
-      res.status(409).send({ error: 'Appointment already registered' })
+      res.status(409).send({error: 'Appointment already registered'})
       return
     }
 
     let startConflicts = await Appointment.find({
       date: req.body.date,
       user_id: req.body.user_id,
-      start: { $lte: req.body.start },
-      end: { $gte: req.body.start },
+      start: {$lte: req.body.start},
+      end: {$gte: req.body.start},
     })
 
     if (startConflicts.length > 0) {
-      res.status(409).send({ error: 'Conflict with start date' })
+      res.status(409).send({error: 'Conflict with start date'})
       return
     }
 
     let endConflicts = await Appointment.find({
       date: req.body.date,
       user_id: req.body.user_id,
-      start: { $lte: req.body.end },
-      end: { $gte: req.body.end },
+      start: {$lte: req.body.end},
+      end: {$gte: req.body.end},
     })
 
     if (endConflicts.length > 0) {
-      res.status(409).send({ error: 'Conflict with end date' })
+      res.status(409).send({error: 'Conflict with end date'})
       return
     }
 
     let startEndConflicts = await Appointment.find({
       date: req.body.date,
       user_id: req.body.user_id,
-      start: { $gte: req.body.start },
-      end: { $lte: req.body.end },
+      start: {$gte: req.body.start},
+      end: {$lte: req.body.end},
     })
 
     if (startEndConflicts.length > 0) {
-      res.status(409).send({ error: 'Conflict with start and end date' })
+      res.status(409).send({error: 'Conflict with start and end date'})
       return
     }
 
@@ -173,51 +173,51 @@ class AppointmentValidator {
     let appointment = await Appointment.findById(req.params.id)
 
     if (!appointment) {
-      res.status(404).send({ error: 'Appointment not found' })
+      res.status(404).send({error: 'Appointment not found'})
       return
     }
 
     if (req.body.start) {
       startConflicts = await Appointment.find({
-        id: { $ne: req.params.id },
+        id: {$ne: req.params.id},
         date: req.body.date,
         user_id: req.body.user_id,
-        start: { $lte: req.body.start },
-        end: { $gte: req.body.start },
+        start: {$lte: req.body.start},
+        end: {$gte: req.body.start},
       })
 
       if (startConflicts.length > 0) {
-        res.status(409).send({ error: 'Conflict with start date' })
+        res.status(409).send({error: 'Conflict with start date'})
         return
       }
     }
 
     if (req.body.start) {
       endConflicts = await Appointment.find({
-        id: { $ne: req.params.id },
+        id: {$ne: req.params.id},
         date: req.body.date,
         user_id: req.body.user_id,
-        start: { $lte: req.body.end },
-        end: { $gte: req.body.end },
+        start: {$lte: req.body.end},
+        end: {$gte: req.body.end},
       })
 
       if (endConflicts.length > 0) {
-        res.status(409).send({ error: 'Conflict with end date' })
+        res.status(409).send({error: 'Conflict with end date'})
         return
       }
     }
 
     if (req.body.start && req.body.end) {
       startEndConflicts = await Appointment.find({
-        id: { $ne: req.params.id },
+        id: {$ne: req.params.id},
         date: req.body.date,
         user_id: req.body.user_id,
-        start: { $gte: req.body.start },
-        end: { $lte: req.body.end },
+        start: {$gte: req.body.start},
+        end: {$lte: req.body.end},
       })
 
       if (startEndConflicts.length > 0) {
-        res.status(409).send({ error: 'Conflict with start and end date' })
+        res.status(409).send({error: 'Conflict with start and end date'})
         return
       }
     }
@@ -236,7 +236,7 @@ class AppointmentValidator {
     let appointment = await Appointment.findById(req.params.id)
 
     if (!appointment) {
-      res.status(404).send({ error: 'Appointment not found' })
+      res.status(404).send({error: 'Appointment not found'})
       return
     }
 
@@ -254,7 +254,7 @@ class AppointmentValidator {
     let user = await User.findById(req.params.id)
 
     if (!user) {
-      res.status(404).send({ error: 'User not found' })
+      res.status(404).send({error: 'User not found'})
       return
     }
 
@@ -262,4 +262,4 @@ class AppointmentValidator {
   }
 }
 
-export default new AppointmentValidator()
+export {AppointmentValidator}

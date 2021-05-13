@@ -1,18 +1,20 @@
-import { Router } from 'express'
-import AppointmentValidator from '../app/middlewares/appointmentValidator.js'
-import AppointmentController from '../app/controllers/appointment.js'
+import {Router} from 'express'
+import {AppointmentValidator} from '../app/middlewares/appointment-validator.js'
+import {AppointmentController} from '../app/controllers/appointment.js'
 
 const router = Router()
+const validator = new AppointmentValidator()
+const appointment = new AppointmentController()
 
 router.route('/')
-  .get(AppointmentController.findAll)
-  .post(AppointmentValidator.createRules, AppointmentValidator.validateCreate, AppointmentController.create)
+  .get(appointment.findAll)
+  .post(validator.createRules, validator.validateCreate, appointment.create)
 
 router.route('/:id')
-  .get(AppointmentValidator.idRules, AppointmentController.findOne)
-  .put(AppointmentValidator.updateRules, AppointmentValidator.validateUpdate, AppointmentController.update)
-  .delete(AppointmentValidator.idRules, AppointmentValidator.validate, AppointmentController.delete)
+  .get(validator.idRules, appointment.findOne)
+  .put(validator.updateRules, validator.validateUpdate, appointment.update)
+  .delete(validator.idRules, validator.validate, appointment.delete)
 
-router.get('/user/:id', AppointmentValidator.userIdRules, AppointmentValidator.validateFindByUser, AppointmentController.findByUser)
+router.get('/user/:id', validator.userIdRules, validator.validateFindByUser, appointment.findByUser)
 
-export default router
+export {router}

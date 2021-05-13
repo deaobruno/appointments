@@ -1,5 +1,5 @@
-import { body, param, validationResult } from 'express-validator'
-import User from '../models/user.js'
+import {body, param, validationResult} from 'express-validator'
+import {User} from '../models/user.js'
 
 class UserValidator {
   constructor() {
@@ -45,7 +45,7 @@ class UserValidator {
     let user = await User.findOne(req.body)
 
     if (user) {
-      res.status(409).send({ error: 'User already registered' })
+      res.status(409).send({error: 'User already registered' })
       return
     }
 
@@ -63,7 +63,7 @@ class UserValidator {
     let user = await User.findById(req.params.id)
 
     if (!user) {
-      res.status(404).send({ error: 'User not found' })
+      res.status(404).send({error: 'User not found' })
       return
     }
 
@@ -71,4 +71,4 @@ class UserValidator {
   }
 }
 
-export default new UserValidator()
+export {UserValidator}

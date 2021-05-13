@@ -1,5 +1,5 @@
-import mongoose from '../../database/db.js'
-import User from '../models/user.js'
+import {mongoose} from '../../database/db.js'
+import {User} from '../models/user.js'
       
 let timeRegex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/
 
@@ -28,6 +28,6 @@ let AppointmentSchema = mongoose.Schema({
   },
 })
 
-let AppointmentModel = mongoose.model('AppointmentModel', AppointmentSchema)
+let Appointment = mongoose.model('Appointment', AppointmentSchema)
 
-export default AppointmentModel
+export {Appointment}
